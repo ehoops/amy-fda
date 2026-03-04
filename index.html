@@ -341,7 +341,7 @@
         <input type="text" id="your-name" placeholder="Jane Smith" />
       </div>
       <div class="form-group" style="max-width:170px">
-        <label for="zip-code">Your Zip Code *</label>
+        <label for="zip-code">Your Zip Code (optional)</label>
         <input type="text" id="zip-code" placeholder="e.g. 94501" maxlength="5" />
       </div>
     </div>
@@ -411,16 +411,6 @@
     <div class="email-body-card">
       <h3>Email Body <span style="font-size:12px;font-weight:400;color:var(--text-light);">(click to select all)</span></h3>
       <div id="email-body-text"></div>
-    </div>
-
-    <!-- SENATORS BOX -->
-    <div class="senators-box" id="senators-box" style="display:none;">
-      <h3>📬 Also Contact Your Senators &amp; Representative</h3>
-      <p class="subtitle" id="senators-state-line">Based on your zip code</p>
-      <div id="senators-list"></div>
-      <div class="senators-tip">
-        💡 <strong>Tip:</strong> For each contact, click <em>📋 Copy Message</em> first, then <em>Open Contact Form ↗</em>. Paste your message into their <strong>Message</strong> field and submit!
-      </div>
     </div>
 
     <!-- SENATORS BOX -->
@@ -1725,7 +1715,7 @@ window.handlePreviewEmail = function() {
     document.getElementById("your-name").focus();
     return;
   }
-  if (!/^\d{5}$/.test(zip)) {
+  if (zip && !/^\d{5}$/.test(zip)) {
     notice.innerHTML = '<div class="notice error">Please enter a valid 5-digit US zip code.</div>';
     document.getElementById("zip-code").focus();
     return;
@@ -1733,6 +1723,14 @@ window.handlePreviewEmail = function() {
 
   notice.innerHTML = "";
   btn.disabled = true;
+
+  if (!zip) {
+    // No zip — skip rep lookup
+    btn.innerHTML = "✉️ Generate Message";
+    sendEmail(name, relation, phone, personal, [], zip, null);
+    return;
+  }
+
   btn.innerHTML = '<span class="spinner"></span>Looking up your representatives&hellip;';
 
   // Look up congressional reps, then fire the email
@@ -1812,9 +1810,8 @@ function sendEmail(name, relation, phone, personal, repEmails, zip, civicRep) {
   // ── Switch to email page ──
   document.getElementById("page-form").style.display  = "none";
   document.getElementById("page-email").style.display = "block";
-  window.scrollTo({ top: 0, behavior: "smooth" });
-
-
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
 
   // ── Populate senators + rep box ──
   var result = getSenatorsByZip(zip);
@@ -1872,6 +1869,10 @@ function sendEmail(name, relation, phone, personal, repEmails, zip, civicRep) {
     }
 
     list.innerHTML = cards.join("");
+    box.style.display = "block";
+  } else if (!zip) {
+    list.innerHTML = '<p style="margin:0;">If you\'re in the US, write your senators! Enter your zip code to find and contact them.</p>';
+    stLine.textContent = "";
     box.style.display = "block";
   } else {
     box.style.display = "none";
@@ -1966,7 +1967,8 @@ document.addEventListener("DOMContentLoaded", function() {
   if (bb) bb.addEventListener("click", function() {
     document.getElementById("page-email").style.display = "none";
     document.getElementById("page-form").style.display  = "block";
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   });
 
   // Click email body to select all
