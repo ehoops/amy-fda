@@ -399,7 +399,7 @@
       <h3>Email Recipients &amp; Subject</h3>
       <div class="meta-row"><span class="meta-label">To</span><span class="meta-value" id="ep-to"></span></div>
       <div class="meta-row"><span class="meta-label">CC</span><span class="meta-value" id="ep-cc"></span></div>
-      <div class="meta-row"><span class="meta-label">BCC</span><span class="meta-value">ahoyabruin@yahoo.com</span></div>
+      <div class="meta-row"><span class="meta-label">BCC</span><span class="meta-value">{{AMY_EMAIL}}</span></div>
       <div class="meta-row"><span class="meta-label">Subject</span><span class="meta-value">Urgent: Approve Troriluzole with Regulatory Flexibility</span></div>
     </div>
 
@@ -1617,7 +1617,7 @@ function buildEmailBody(name, relation, phone, personalMsg) {
 
   return "To Whom It May Concern at the U.S. Food and Drug Administration,\n"
     + personalBlock
-    + "I am writing on behalf of " + (relation ? "my " + relation + ", " : "") + "Amy Messigian, who lives with spinocerebellar ataxia type 1 (SCA1), a rare, hereditary, progressive, and fatal neurodegenerative disease. SCA1 affects balance, coordination, speech, swallowing, and ultimately a person's ability to live independently. There are currently no FDA-approved treatments and no cure for this condition.\n\n"
+    + "I am writing on behalf of " + (relation ? "my " + relation + ", " : "") + "{{AMY_FULL_NAME}}, who lives with spinocerebellar ataxia type 1 (SCA1), a rare, hereditary, progressive, and fatal neurodegenerative disease. SCA1 affects balance, coordination, speech, swallowing, and ultimately a person's ability to live independently. There are currently no FDA-approved treatments and no cure for this condition.\n\n"
     + "Amy was diagnosed in her 30s. Before that, she watched this same disease take her mother's life at just 60 years old. She understands exactly what untreated progression looks like.\n\n"
     + "In 2017, Amy enrolled in a clinical trial for an investigational medication called troriluzole. While it is not a cure, it has significantly slowed the progression of her disease. In SCA1, patients typically decline steadily and experience sharp deterioration within several years. Amy expected that trajectory. Instead, the steep decline was delayed for nearly a decade.\n\n"
     + "This has been life-changing.\n\n"
@@ -1639,9 +1639,9 @@ function buildEmailBody(name, relation, phone, personalMsg) {
     + name + "\n"
     + (phone ? phone + "\n" : "")
     + "\n"
-    + "Please feel free to also contact Amy Messigian directly:\n"
-    + "ahoyabruin@yahoo.com\n"
-    + "310-409-7300";
+    + "Please feel free to also contact {{AMY_FULL_NAME}} directly:\n"
+    + "{{AMY_EMAIL}}\n"
+    + "{{AMY_PHONE}}";
 }
 
 // ── FIRE MAILTO LINK ──
@@ -1669,7 +1669,7 @@ function fireMailto(toAddr, ccStr, subject, body) {
   // Step 2 — open mailto with To/CC/BCC/Subject only (no body in URL)
   var mailto = "mailto:" + toAddr
     + "?cc="      + encodeURIComponent(ccStr)
-    + "&bcc="     + encodeURIComponent("ahoyabruin@yahoo.com")
+    + "&bcc="     + encodeURIComponent("{{AMY_EMAIL}}")
     + "&subject=" + encodeURIComponent(subject);
 
   var old = document.getElementById("_hidden_mailto");
@@ -1803,7 +1803,7 @@ function sendEmail(name, relation, phone, personal, repEmails, zip, civicRep) {
 
   var mailtoHref = "mailto:" + FDA_TO.join(", ")
     + "?cc="      + encodeURIComponent(ccStr)
-    + "&bcc="     + encodeURIComponent("ahoyabruin@yahoo.com")
+    + "&bcc="     + encodeURIComponent("{{AMY_EMAIL}}")
     + "&subject=" + encodeURIComponent(EMAIL_SUBJECT);
   document.getElementById("btn-open-email-app").href = mailtoHref;
 
